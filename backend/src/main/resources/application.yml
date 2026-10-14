@@ -1,0 +1,13 @@
+spring:
+  config:
+    import: "optional:file:./.env[.properties]"
+  application:
+    name: ah.webshop
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
