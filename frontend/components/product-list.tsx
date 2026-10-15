@@ -6,7 +6,7 @@ import {SkeletonCard} from "@/components/product-card-skeleton";
 import {Field} from "@/components/ui/field";
 import {InputGroup, InputGroupAddon, InputGroupInput, InputGroupText} from "@/components/ui/input-group";
 import {Button} from "@/components/ui/button";
-import {FaCross} from "react-icons/fa6";
+import {FaCross, FaQuestion} from "react-icons/fa6";
 import {FaTimes} from "react-icons/fa";
 import {
     Select,
@@ -17,6 +17,7 @@ import {
     SelectTrigger,
     SelectValue
 } from "@/components/ui/select";
+import {Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle} from "@/components/ui/empty";
 
 export interface Product {
     id: number;
@@ -106,12 +107,32 @@ export default function ProductList() {
 
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 p-8">
-                {isLoading ? [1, 2, 3, 4, 5].map((number) => {
+                {isLoading && [1, 2, 3, 4, 5].map((number) => {
                     return <SkeletonCard key={number}/>
-                }) : (
+                })}
+
+                { !isLoading && filteredProducts.length > 0 ? (
                     filteredProducts.map((product) => {
                         return <ProductCard key={product.id} product={product}/>
                     })
+                ) : (
+                    <div className={"flex items-center justify-center col-span-3"}>
+                        <Empty>
+                            <EmptyHeader>
+                                <EmptyMedia variant="icon">
+                                    <FaQuestion/>
+                                </EmptyMedia>
+                                <EmptyTitle>Geen producten gevonden</EmptyTitle>
+                                <EmptyDescription>Probeer een andere zoekopdracht</EmptyDescription>
+                            </EmptyHeader>
+                            <EmptyContent>
+                                <Button  onClick={() => {
+                                    setSearchTerm("")
+                                }} variant={"outline"}>Reset filters</Button>
+                            </EmptyContent>
+                        </Empty>
+                    </div>
+
                 )}
             </div>
 
