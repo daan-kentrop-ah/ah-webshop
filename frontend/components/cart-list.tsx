@@ -10,6 +10,7 @@ import {Product} from "@/components/product-list";
 import {Item, ItemContent, ItemDescription, ItemGroup, ItemMedia, ItemTitle} from "@/components/ui/item";
 import Link from "next/link";
 import CartItemCard from "@/components/cart-item";
+import {Card, CardDescription, CardHeader, CardTitle} from "@/components/ui/card";
 
 export interface CartItem {
     id: number,
@@ -27,9 +28,12 @@ export default function CartList() {
     const {data: cartItems, isLoading, isError} = useQuery({queryKey: ['cartitems'], queryFn: getProducts});
 
     const items: CartItem[] = cartItems ? cartItems : [];
+
+    const totalAmountInEuros = (items.reduce((total, cartItem) => total + (cartItem.product.priceInCents * cartItem.quantity), 0) / 100).toFixed(2)
+    const totalAmountOfItems = items.reduce((total, cartItem) => total + cartItem.quantity, 0);
     return (
-        <section className={"max-w-[1000px] mx-auto"}>
-            <div className="">
+        <section className={"max-w-[1000px] mx-auto grid grid-cols-1 md:grid-cols-10 gap-8"}>
+            <div className=" col-span-1 md:col-span-7">
                 {isLoading && [1, 2, 3, 4, 5].map((number) => {
                     return <SkeletonCard key={number}/>
                 })}
@@ -69,6 +73,13 @@ export default function CartList() {
 
                 )}
             </div>
+
+            <Card className={"col-span-1 md:col-span-3 h-min"}>
+                <CardHeader>
+                    <CardTitle className={"text-xl font-bold text-gray-700"}>Totaal</CardTitle>
+                    <CardDescription className={"font-bold text-xl"}>€ {totalAmountInEuros} <span className={"text-xs"}>({totalAmountOfItems} producten)</span></CardDescription>
+                </CardHeader>
+            </Card>
 
         </section>
 
