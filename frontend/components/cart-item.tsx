@@ -6,6 +6,7 @@ import {apiFetch} from "@/lib/api-fetch";
 import {ButtonGroup} from "@/components/ui/button-group";
 import {Button} from "@/components/ui/button";
 import {FaMinus, FaPlus, FaTrash} from "react-icons/fa6";
+import {toast} from "@/components/ui/toast";
 
 
 export default function CartItemCard({cartItem}: { cartItem: CartItem }) {
@@ -23,6 +24,12 @@ export default function CartItemCard({cartItem}: { cartItem: CartItem }) {
 
     const handleDelete = () => {
         deleteMutation.mutate();
+        toast.add({
+            title: `${cartItem.product.name} verwijderd`,
+            description: `${cartItem.product.name} is succesvol uit het winkelmandje verwijderd`,
+            type: "success",
+            timeout: 2000,
+        })
     }
 
     const quantityMutation = useMutation({
@@ -42,6 +49,12 @@ export default function CartItemCard({cartItem}: { cartItem: CartItem }) {
             handleDelete();
         } else {
             quantityMutation.mutate(newQuantity);
+            toast.add({
+                title: `${cartItem.product.name} bijgewerkt`,
+                description: `${cartItem.product.name} is succesvol bijgewerkt`,
+                type: "success",
+                timeout: 2000,
+            })
         }
     }
 
