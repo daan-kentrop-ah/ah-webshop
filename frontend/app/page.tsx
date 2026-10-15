@@ -1,9 +1,7 @@
-import Image from "next/image";
+import PageHeader from "@/components/page-header";
 
 export default function Home() {
   return (
-   <h1>
-     Welkom
-   </h1>
+   <PageHeader title={"Producten"}/>
   );
 }
