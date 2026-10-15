@@ -9,8 +9,10 @@ import {apiFetch} from "@/lib/api-fetch";
 import {Alert, AlertDescription, AlertTitle} from "@/components/ui/alert";
 import {AlertCircleIcon} from "lucide-react";
 import {toast} from "@/components/ui/toast";
+import {useRouter} from "next/navigation";
 
-export default function ProductCard({product}: {product: Product}){
+export default function ProductCard({product}: { product: Product }) {
+    const navigation = useRouter();
     const queryClient = useQueryClient();
     const mutation = useMutation({
         mutationFn: (productId: number) => apiFetch('/api/cart/items', {
@@ -25,15 +27,18 @@ export default function ProductCard({product}: {product: Product}){
         mutation.mutate(product.id);
         toast.add({
             title: `${product.name} toegevoegd`,
-            description: `${product.name} is succesvol aan het winkelmandje toegevoegd`,
+            description: <Button variant={"outline"} onClick={() => {
+                navigation.push('/cart');
+            }}>bekijk winkelmandje</Button>,
             type: "success",
             timeout: 2000,
+
         })
     }
 
     return (
         <Card className="relative mx-auto w-full max-w-sm pt-0">
-            <div className="absolute inset-0 z-30 aspect-square bg-sky-300/15" />
+            <div className="absolute inset-0 z-30 aspect-square bg-sky-300/15"/>
             <img
                 src={product.imageUrl}
                 alt="Event cover"
@@ -41,7 +46,8 @@ export default function ProductCard({product}: {product: Product}){
             />
             <CardHeader>
                 <CardTitle className={"text-xl font-bold text-gray-700"}>{product.name}</CardTitle>
-                <CardDescription className={"font-bold text-3xl"}>€ {(product.priceInCents / 100 ).toFixed(2)}</CardDescription>
+                <CardDescription
+                    className={"font-bold text-3xl"}>€ {(product.priceInCents / 100).toFixed(2)}</CardDescription>
             </CardHeader>
             {mutation.isError && (
                 <Alert variant="destructive">
@@ -51,7 +57,8 @@ export default function ProductCard({product}: {product: Product}){
                 </Alert>
             )}
             <CardFooter>
-                <Button onClick={handleAddToCart} disabled={mutation.isPending} className="w-full bg-sky-500 hover:bg-sky-600 font-bold">
+                <Button onClick={handleAddToCart} disabled={mutation.isPending}
+                        className="w-full bg-sky-500 hover:bg-sky-600 font-bold">
                     <FaCartShopping/>
                     {mutation.isPending ? 'Toevoegen…' : 'Toevoegen aan winkelmandje'}
                 </Button>
