@@ -50,7 +50,7 @@ export default function CartList() {
 
                 {!isLoading && items.length > 0 ? (
                     <ItemGroup className="gap-4">
-                        {items.map((cartItem: CartItem) => (
+                        {items.sort((a, b) => a.id - b.id).map((cartItem: CartItem) => (
                             <CartItemCard cartItem={cartItem} key={cartItem.id}/>
                         ))}
 
