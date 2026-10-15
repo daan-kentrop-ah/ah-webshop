@@ -20,6 +20,7 @@ import {
 import {Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle} from "@/components/ui/empty";
 import {Alert, AlertDescription, AlertTitle} from "@/components/ui/alert";
 import {AlertCircleIcon} from "lucide-react";
+import {apiFetch} from "@/lib/api-fetch";
 
 export interface Product {
     id: number;
@@ -29,11 +30,7 @@ export interface Product {
 }
 
 async function getProducts(): Promise<Product[]> {
-    const res = await fetch('/api/products');
-
-    if (!res.ok) {
-        throw new Error(res.statusText);
-    }
+    const res = await apiFetch('/api/products');
 
     return res.json();
 }
@@ -152,5 +149,4 @@ export default function ProductList() {
 
     )
 }
-
 

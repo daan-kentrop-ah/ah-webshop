@@ -1,8 +1,9 @@
 import {NextResponse} from "next/server";
+import {backendFetch} from "@/lib/backend-fetch";
 
 export async function GET() {
     try {
-        const response = await fetch('http://localhost:8080/v1/products', {
+        const response = await backendFetch('/v1/products', {
             headers: { accept: 'application/json' },
         });
 
