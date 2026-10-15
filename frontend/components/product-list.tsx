@@ -18,6 +18,8 @@ import {
     SelectValue
 } from "@/components/ui/select";
 import {Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle} from "@/components/ui/empty";
+import {Alert, AlertDescription, AlertTitle} from "@/components/ui/alert";
+import {AlertCircleIcon} from "lucide-react";
 
 export interface Product {
     id: number;
@@ -111,11 +113,21 @@ export default function ProductList() {
                     return <SkeletonCard key={number}/>
                 })}
 
+                {isError && (
+                    <Alert variant="destructive" className="max-w-md col-span-3">
+                        <AlertCircleIcon />
+                        <AlertTitle>Ophalen van producten mislukt</AlertTitle>
+                        <AlertDescription>
+                            We konden de producten helaas niet ophalen
+                        </AlertDescription>
+                    </Alert>
+                )}
+
                 { !isLoading && filteredProducts.length > 0 ? (
                     filteredProducts.map((product) => {
                         return <ProductCard key={product.id} product={product}/>
                     })
-                ) : (
+                ) : !isError && !isLoading && (
                     <div className={"flex items-center justify-center col-span-3"}>
                         <Empty>
                             <EmptyHeader>
