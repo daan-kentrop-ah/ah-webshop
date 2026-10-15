@@ -8,6 +8,7 @@ import {FaCartShopping} from "react-icons/fa6";
 import {apiFetch} from "@/lib/api-fetch";
 import {Alert, AlertDescription, AlertTitle} from "@/components/ui/alert";
 import {AlertCircleIcon} from "lucide-react";
+import {toast} from "@/components/ui/toast";
 
 export default function ProductCard({product}: {product: Product}){
     const queryClient = useQueryClient();
@@ -20,7 +21,15 @@ export default function ProductCard({product}: {product: Product}){
         onSuccess: () => queryClient.invalidateQueries({queryKey: ['cartitems']}),
     });
 
-    const handleAddToCart = () => mutation.mutate(product.id);
+    const handleAddToCart = () => {
+        mutation.mutate(product.id);
+        toast.add({
+            title: `${product.name} toegevoegd`,
+            description: `${product.name} is succesvol aan het winkelmandje toegevoegd`,
+            type: "success",
+            timeout: 2000,
+        })
+    }
 
     return (
         <Card className="relative mx-auto w-full max-w-sm pt-0">

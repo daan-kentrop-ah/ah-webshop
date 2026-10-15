@@ -4,6 +4,7 @@ import "./globals.css";
 import NavBar from "@/components/navbar";
 import { cn } from "@/lib/utils";
 import {ReactQueryProvider} from "@/providers/react-query-provider";
+import {Toaster} from "@/components/ui/toast";
 
 const inter = Inter({subsets:['latin'],variable:'--font-sans'});
 
@@ -35,6 +36,7 @@ export default function RootLayout({children}: LayoutProps<"/">) {
                     <div className="p-8">
                         {children}
                     </div>
+                <Toaster/>
                 </body>
             </ReactQueryProvider>
         </html>
