@@ -97,8 +97,16 @@ k3d image import localhost/ah-webshop-backend:1.0 -c mycluster
 
 ### Phase 4
 
-Wrote a manifest file for the frontend. Had some problems with accessing the frontend in my browser. I was using the
+Wrote a manifest file for the frontend.
+https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
+https://www.geeksforgeeks.org/cloud-computing/docker-working-with-kubernetes/
+https://dev.to/prodevopsguytech/writing-kubernetes-manifests-from-beginner-to-advanced-31bg
+https://spacelift.io/blog/kubernetes-manifest-file
+
+Had some problems with accessing the frontend in my browser. I was using the
 LoadBalancer service type but it was not working. I changed it to NodePort and it worked.
+https://www.geeksforgeeks.org/devops/kubernetes-nodeport-service/
+https://k3d.io/v5.0.0/usage/exposing_services/#2-via-nodeport
 
 I exposed the frontend port to exterrnal by using this command:
 
