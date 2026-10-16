@@ -1,0 +1,40 @@
+services:
+  ah-webshop-frontend:
+    image: localhost/ah-webshop-frontend:1.0
+    container_name: ah-webshop-frontend
+    environment:
+      BACKEND_URL: http://ah-webshop-backend:8080
+    depends_on:
+      - ah-webshop-backend
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
+
+  ah-webshop-backend:
+    image: localhost/ah-webshop-backend:1.0
+    container_name: ah-webshop-backend
+    env_file:
+      - ./backend/.env
+    environment:
+      DB_URL: jdbc:postgresql://ah-webshop-db:5432/webshop
+    depends_on:
+      ah-webshop-db:
+        condition: service_healthy
+    ports:
+      - "8080:8080"
+    restart: unless-stopped
+
+  ah-webshop-db:
+    image: postgres:17
+    container_name: ah-webshop-db
+    env_file:
+      - ./database/.env
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./database/data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
