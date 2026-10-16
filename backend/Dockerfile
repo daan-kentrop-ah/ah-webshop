@@ -1,3 +1,4 @@
+#gebruikte bron: https://spring.io/guides/gs/spring-boot-docker
 FROM eclipse-temurin:25
 COPY target/*.jar app.jar
 EXPOSE 8080
