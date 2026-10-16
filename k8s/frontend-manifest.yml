@@ -32,7 +32,7 @@ spec:
                   image: localhost/ah-webshop-frontend:1.0
                   env:
                     - name: BACKEND_URL
-                      value: http://ah-webshop-backend:8080
+                      value: http://backend-service:8080
                   ports:
                     - containerPort: 3000
 

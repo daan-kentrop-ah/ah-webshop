@@ -108,3 +108,47 @@ k3d cluster edit mycluster --port-add "3000:30080@server:0"
 
 This maps external port 3000 to internal port 30080 on the server node. @server:0 is k3d syntax to specify the first
 server node in the cluster.
+
+Then i copied the frontend manifest to create a backend manifest. I change the labels, ports, env variables and image.
+
+I applied the manifests to the cluster using:
+
+```shell
+kubectl apply -f k8s
+```
+
+When I needed to restart a specific deployment I used this commands:
+
+```shell
+kubectl rollout restart deployment/backend-deployment
+kubectl rollout restart deployment/frontend-deployment
+kubectl rollout restart deployment/database-deployment
+```
+
+The backend pod was not starting because it could not connect to the database. So I needed to add the database to the
+cluster. I created a manifest for the database the same way as the frontend and backend. Then applied the new manifests.
+I did not work immediately because I was still using the urls from the docker compose which where based on the docker
+network. I changed the urls to use the service names of the database and backend. After that it worked.
+
+I hardcoded the env variables in the manifest so the next step was using secrets to store the env variables. I did this
+by change the name and value pairs to valueFrom.
+
+https://kubernetes.io/docs/tasks/inject-data-application/distribute-credentials-secure/#define-a-container-environment-variable-with-data-from-a-single-secret
+
+Then I created a secret from a .env file using the command:
+
+```shell
+kubectl create secret generic webshop-secrets --from-env-file=k8s/.env
+```
+
+https://kubernetes.io/docs/reference/kubectl/generated/kubectl_create/kubectl_create_secret_generic/
+
+to not have to run the command I added a kustomization.yaml file to the k8s folder. This uses Kustomize to create the
+secret from the .env file and apply all manifests in the k8s folder. I can now run this command to apply all manifests
+and create the secret:
+
+```shell
+kubectl apply -k k8s
+```
+(only change is -k instead of -f)
+
