@@ -48,26 +48,30 @@ npx create-next-app@latest
 
 Used the recommended settings and added TypeScript support. Then installed shadcn for UI components.
 
-
 #### Backend
 
 Used spring boot initalizer to create a new project and put it in the backend folder. Added dependencies for Spring Web,
-Spring Data JPA, and Postgres Driver. 
+Spring Data JPA, and Postgres Driver.
 
 #### Database
+
 Setup a postgres database by using a docker compose file.
 
 ### Phase 2
-Wrote docker files for the backend and frontend. Sources used: 
+
+Wrote docker files for the backend and frontend. Sources used:
+
 - [Containerize a Next.js application - docker docs](https://docs.docker.com/guides/nextjs/)
 - [Spring Boot with Docker - Spring docs](https://spring.io/guides/gs/spring-boot-docker)
 
 Build the frontend image using:
+
 ```shell
 podman build -t ah-webshop-frontend:1.0 ./frontend
 ```
 
 Build the backend image using:
+
 ```shell
 mvn clean package -DskipTests
 
@@ -76,16 +80,31 @@ podman build -t ah-webshop-backend:1.0 ./backend
 
 Setup a main docker compose to create containers with the build images and a Postgres image from docker.
 
-Fixed a problem with the backend not correctly connection to the backend while starting up. To fix this I implemented a health check in the database and used ```depends_on```. (https://blog.gntech.me/posts/2026-05-26-docker-healthchecks-compose-service-readiness/)
-
+Fixed a problem with the backend not correctly connection to the backend while starting up. To fix this I implemented a
+health check in the database and used ```depends_on```.
+(https://blog.gntech.me/posts/2026-05-26-docker-healthchecks-compose-service-readiness/)
 
 ### Phase 3
+
 I already installed k3d in phase 0 so it was already running here.
 
 Imported the frontend and backend images into the k3d cluster using:
+
 ```shell
 k3d image import localhost/ah-webshop-frontend:1.0 -c mycluster
 k3d image import localhost/ah-webshop-backend:1.0 -c mycluster
 ```
 
+### Phase 4
 
+Wrote a manifest file for the frontend. Had some problems with accessing the frontend in my browser. I was using the
+LoadBalancer service type but it was not working. I changed it to NodePort and it worked.
+
+I exposed the frontend port to exterrnal by using this command:
+
+```shell
+k3d cluster edit mycluster --port-add "3000:30080@server:0"
+```
+
+This maps external port 3000 to internal port 30080 on the server node. @server:0 is k3d syntax to specify the first
+server node in the cluster.
